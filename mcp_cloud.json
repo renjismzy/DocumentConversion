@@ -1,0 +1,85 @@
+{
+  "name": "mcp-document-converter",
+  "version": "1.0.0",
+  "description": "云端文档转换MCP服务器，支持PDF、Word、Markdown、HTML等多种格式转换",
+  "author": "MCP Document Converter Team",
+  "license": "MIT",
+  "homepage": "https://github.com/mcp-document-converter/mcp-document-converter",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mcp-document-converter/mcp-document-converter.git"
+  },
+  "keywords": ["mcp", "document", "conversion", "pdf", "word", "markdown", "html", "cloud"],
+  "python_requires": ">=3.8",
+  "main": "document_converter_mcp.py",
+  "cloud": {
+    "platform": "modelscope",
+    "runtime": "python3.11",
+    "memory": "512Mi",
+    "cpu": "500m",
+    "port": 8000,
+    "health_check": "/health",
+    "startup_timeout": 60,
+    "environment": {
+      "MCP_SERVER_NAME": "DocumentConverter",
+      "MCP_LOG_LEVEL": "INFO",
+      "MCP_MAX_FILE_SIZE": "50MB",
+      "MCP_TEMP_DIR": "/tmp",
+      "MCP_ENABLE_PANDOC": "true"
+    }
+  },
+  "mcp": {
+    "server": {
+      "command": "python",
+      "args": ["document_converter_mcp.py"]
+    },
+    "tools": [
+      {
+        "name": "convert_document",
+        "description": "转换文档格式",
+        "parameters": {
+          "input_path": "输入文件路径",
+          "output_path": "输出文件路径",
+          "target_format": "目标格式"
+        }
+      },
+      {
+        "name": "list_supported_formats",
+        "description": "列出支持的文档格式"
+      },
+      {
+        "name": "get_file_info",
+        "description": "获取文件信息",
+        "parameters": {
+          "file_path": "文件路径"
+        }
+      },
+      {
+        "name": "batch_convert",
+        "description": "批量转换文档",
+        "parameters": {
+          "input_dir": "输入目录",
+          "output_dir": "输出目录",
+          "target_format": "目标格式"
+        }
+      },
+      {
+        "name": "health_check",
+        "description": "健康状态检查"
+      }
+    ]
+  },
+  "dependencies": {
+    "fastmcp": ">=2.0.0",
+    "markitdown[all]": ">=0.0.1a2",
+    "pypandoc": ">=1.13",
+    "python-docx": ">=1.1.0",
+    "pdfplumber": ">=0.11.0",
+    "markdown": ">=3.6",
+    "mcp": ">=1.2.0",
+    "Pillow": ">=10.0.0",
+    "openpyxl": ">=3.1.0",
+    "beautifulsoup4": ">=4.12.0",
+    "lxml": ">=5.0.0"
+  }
+}

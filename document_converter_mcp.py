@@ -2,6 +2,7 @@
 """
 统一文档转换 MCP 服务器
 支持 PDF、Word、Markdown、HTML 等格式之间的相互转换
+支持云端部署和HTTP健康检查
 """
 
 import os
@@ -13,6 +14,8 @@ import traceback
 from pathlib import Path
 from typing import Optional, Dict, Any, List
 from functools import wraps
+import threading
+from http.server import HTTPServer, BaseHTTPRequestHandler
 
 # FastMCP imports
 from fastmcp import FastMCP
@@ -455,9 +458,98 @@ def health_check() -> str:
     
     return json.dumps(status, ensure_ascii=False, indent=2)
 
+def _get_health_status() -> dict:
+    """获取健康状态信息（内部函数，不是MCP工具）"""
+    status = {
+        "服务器状态": "运行中",
+        "版本": "1.0.0",
+        "依赖库状态": {
+            "MarkItDown": "可用" if MARKITDOWN_AVAILABLE else "不可用",
+            "PyPandoc": "可用" if PYPANDOC_AVAILABLE else "不可用",
+            "python-docx": "可用" if PYTHON_DOCX_AVAILABLE else "不可用",
+            "pdfplumber": "可用" if PDFPLUMBER_AVAILABLE else "不可用",
+            "markdown": "可用" if MARKDOWN_AVAILABLE else "不可用"
+        },
+        "配置信息": {
+            "最大文件大小": f"{config.max_file_size / 1024 / 1024:.1f}MB",
+            "临时目录": config.temp_dir,
+            "日志级别": config.log_level,
+            "启用Pandoc": config.enable_pandoc
+        },
+        "支持格式": {
+            "输入": ["pdf", "docx", "pptx", "xlsx", "txt", "md", "html"] if MARKITDOWN_AVAILABLE else ["txt", "md"],
+            "输出": ["txt", "markdown", "html", "docx", "pdf"] if all([PYTHON_DOCX_AVAILABLE, PYPANDOC_AVAILABLE]) else ["txt", "markdown", "html"]
+        }
+    }
+    return status
+
+class HealthCheckHandler(BaseHTTPRequestHandler):
+    """HTTP健康检查处理器"""
+    
+    def do_GET(self):
+        if self.path == '/health':
+            try:
+                # 执行健康检查
+                health_data = _get_health_status()
+                
+                if health_data.get('服务器状态') == '运行中':
+                    self.send_response(200)
+                else:
+                    self.send_response(503)
+                    
+                self.send_header('Content-type', 'application/json')
+                self.send_header('Access-Control-Allow-Origin', '*')
+                self.end_headers()
+                
+                health_result = json.dumps(health_data, ensure_ascii=False, indent=2)
+                self.wfile.write(health_result.encode('utf-8'))
+                
+            except Exception as e:
+                logger.error(f"健康检查处理错误: {e}")
+                self.send_response(500)
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+                error_response = json.dumps({
+                    'status': 'error',
+                    'message': str(e)
+                }, ensure_ascii=False)
+                self.wfile.write(error_response.encode('utf-8'))
+        else:
+            self.send_response(404)
+            self.end_headers()
+    
+    def log_message(self, format, *args):
+        # 禁用默认日志输出
+        pass
+
+def start_health_server(port=8000):
+    """启动HTTP健康检查服务器"""
+    try:
+        server = HTTPServer(('0.0.0.0', port), HealthCheckHandler)
+        logger.info(f"健康检查服务器启动在端口 {port}")
+        server.serve_forever()
+    except Exception as e:
+        logger.error(f"健康检查服务器启动失败: {e}")
+
 def main():
     """主函数"""
     logger.info("启动文档转换 MCP 服务器...")
+    
+    # 检查是否需要启动HTTP健康检查服务器
+    enable_http = os.environ.get('MCP_ENABLE_HTTP', 'false').lower() == 'true'
+    http_port = int(os.environ.get('MCP_HTTP_PORT', '8000'))
+    
+    if enable_http:
+        # 在后台线程启动HTTP服务器
+        health_thread = threading.Thread(
+            target=start_health_server, 
+            args=(http_port,),
+            daemon=True
+        )
+        health_thread.start()
+        logger.info("HTTP健康检查服务器已在后台启动")
+    
+    # 启动MCP服务器
     mcp.run()
 
 if __name__ == "__main__":
