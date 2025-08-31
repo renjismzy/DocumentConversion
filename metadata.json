@@ -1,0 +1,258 @@
+{
+  "schema_version": "1.0",
+  "server_info": {
+    "name": "mcp-document-converter",
+    "display_name": "文档转换器",
+    "version": "1.0.0",
+    "description": "多格式文档转换 MCP 服务器，支持 PDF、Word、Markdown、HTML 等格式之间的相互转换",
+    "author": {
+      "name": "MCP Document Converter Team",
+      "email": "support@example.com",
+      "url": "https://github.com/your-username/mcp-document-converter"
+    },
+    "license": "MIT",
+    "homepage": "https://github.com/your-username/mcp-document-converter",
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/your-username/mcp-document-converter.git"
+    },
+    "documentation": "https://github.com/your-username/mcp-document-converter/blob/main/README.md",
+    "issues": "https://github.com/your-username/mcp-document-converter/issues"
+  },
+  "runtime": {
+    "python_version": ">=3.8",
+    "framework": "FastMCP",
+    "framework_version": ">=2.11.0",
+    "entry_point": "main.py",
+    "package_structure": "src/mcp_document_converter"
+  },
+  "capabilities": {
+    "tools": [
+      {
+        "name": "convert_document",
+        "display_name": "文档转换",
+        "description": "将文档从一种格式转换为另一种格式",
+        "category": "文档处理",
+        "input_formats": ["pdf", "docx", "md", "html", "txt"],
+        "output_formats": ["pdf", "docx", "md", "html", "txt"],
+        "parameters": {
+          "input_path": {
+            "type": "string",
+            "required": true,
+            "description": "输入文件路径"
+          },
+          "output_path": {
+            "type": "string",
+            "required": true,
+            "description": "输出文件路径"
+          },
+          "target_format": {
+            "type": "string",
+            "required": true,
+            "description": "目标格式",
+            "enum": ["pdf", "docx", "markdown", "html", "txt"]
+          }
+        }
+      },
+      {
+        "name": "list_supported_formats",
+        "display_name": "支持格式列表",
+        "description": "获取所有支持的文档格式列表",
+        "category": "信息查询",
+        "parameters": {}
+      },
+      {
+        "name": "get_file_info",
+        "display_name": "文件信息",
+        "description": "获取文件的详细信息，包括格式、大小、创建时间等",
+        "category": "文件操作",
+        "parameters": {
+          "file_path": {
+            "type": "string",
+            "required": true,
+            "description": "文件路径"
+          }
+        }
+      },
+      {
+        "name": "batch_convert",
+        "display_name": "批量转换",
+        "description": "批量转换指定目录下的所有文档",
+        "category": "批量处理",
+        "parameters": {
+          "input_dir": {
+            "type": "string",
+            "required": true,
+            "description": "输入目录路径"
+          },
+          "output_dir": {
+            "type": "string",
+            "required": true,
+            "description": "输出目录路径"
+          },
+          "target_format": {
+            "type": "string",
+            "required": true,
+            "description": "目标格式",
+            "enum": ["pdf", "docx", "markdown", "html", "txt"]
+          }
+        }
+      }
+    ],
+    "supported_formats": {
+      "input": [
+        {
+          "format": "pdf",
+          "extensions": [".pdf"],
+          "description": "便携式文档格式",
+          "converter": "markitdown"
+        },
+        {
+          "format": "docx",
+          "extensions": [".docx"],
+          "description": "Microsoft Word 文档",
+          "converter": "python-docx"
+        },
+        {
+          "format": "markdown",
+          "extensions": [".md", ".markdown"],
+          "description": "Markdown 标记语言",
+          "converter": "markdown"
+        },
+        {
+          "format": "html",
+          "extensions": [".html", ".htm"],
+          "description": "超文本标记语言",
+          "converter": "beautifulsoup4"
+        },
+        {
+          "format": "txt",
+          "extensions": [".txt", ".text"],
+          "description": "纯文本文件",
+          "converter": "built-in"
+        }
+      ],
+      "output": [
+        {
+          "format": "pdf",
+          "extensions": [".pdf"],
+          "description": "便携式文档格式",
+          "converter": "pypandoc"
+        },
+        {
+          "format": "docx",
+          "extensions": [".docx"],
+          "description": "Microsoft Word 文档",
+          "converter": "python-docx"
+        },
+        {
+          "format": "markdown",
+          "extensions": [".md", ".markdown"],
+          "description": "Markdown 标记语言",
+          "converter": "markdown"
+        },
+        {
+          "format": "html",
+          "extensions": [".html", ".htm"],
+          "description": "超文本标记语言",
+          "converter": "built-in"
+        },
+        {
+          "format": "txt",
+          "extensions": [".txt", ".text"],
+          "description": "纯文本文件",
+          "converter": "built-in"
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "python": {
+      "fastmcp": ">=0.9.0",
+      "markitdown": ">=0.0.1a2",
+      "pypandoc": ">=1.13",
+      "python-docx": ">=1.1.2",
+      "pdfplumber": ">=0.11.4",
+      "markdown": ">=3.7",
+      "beautifulsoup4": ">=4.12.3",
+      "lxml": ">=5.3.0"
+    },
+    "system": {
+      "pandoc": {
+        "version": ">=2.0",
+        "required": false,
+        "description": "用于更多格式支持的可选依赖"
+      }
+    }
+  },
+  "configuration": {
+    "environment_variables": {
+      "PYTHONPATH": {
+        "description": "Python模块搜索路径",
+        "default": "./src",
+        "required": false
+      }
+    },
+    "resource_requirements": {
+      "memory": "512MB",
+      "cpu": "1 core",
+      "disk": "100MB"
+    }
+  },
+  "examples": [
+    {
+      "name": "PDF转Markdown",
+      "description": "将PDF文件转换为Markdown格式",
+      "tool": "convert_document",
+      "parameters": {
+        "input_path": "./documents/report.pdf",
+        "output_path": "./documents/report.md",
+        "target_format": "markdown"
+      },
+      "expected_output": "转换成功：./documents/report.md"
+    },
+    {
+      "name": "Word转HTML",
+      "description": "将Word文档转换为HTML格式",
+      "tool": "convert_document",
+      "parameters": {
+        "input_path": "./documents/document.docx",
+        "output_path": "./documents/document.html",
+        "target_format": "html"
+      },
+      "expected_output": "转换成功：./documents/document.html"
+    },
+    {
+      "name": "批量转换",
+      "description": "批量将目录下的所有Word文档转换为PDF",
+      "tool": "batch_convert",
+      "parameters": {
+        "input_dir": "./input_docs",
+        "output_dir": "./output_pdfs",
+        "target_format": "pdf"
+      },
+      "expected_output": "批量转换完成，共处理 X 个文件"
+    }
+  ],
+  "tags": [
+    "document-conversion",
+    "pdf",
+    "word",
+    "markdown",
+    "html",
+    "office",
+    "productivity",
+    "file-processing"
+  ],
+  "categories": [
+    "文档处理",
+    "格式转换",
+    "办公工具"
+  ],
+  "compatibility": {
+    "platforms": ["Windows", "macOS", "Linux"],
+    "ai_assistants": ["Claude", "ChatGPT", "Cursor", "其他支持MCP的AI助手"]
+  },
+  "created_at": "2024-08-31T11:00:00Z",
+  "updated_at": "2024-08-31T11:00:00Z"
+}

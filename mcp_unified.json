@@ -1,0 +1,41 @@
+{
+  "name": "document-converter-mcp",
+  "version": "1.0.0",
+  "description": "统一文档转换 MCP 服务器",
+  "main": "document_converter_mcp.py",
+  "mcp": {
+    "server": {
+      "command": "python",
+      "args": ["document_converter_mcp.py"]
+    },
+    "tools": [
+      {
+        "name": "convert_document",
+        "description": "转换文档格式"
+      },
+      {
+        "name": "list_supported_formats",
+        "description": "列出支持的文档格式"
+      },
+      {
+        "name": "get_file_info",
+        "description": "获取文件信息"
+      },
+      {
+        "name": "batch_convert",
+        "description": "批量转换文档"
+      },
+      {
+        "name": "health_check",
+        "description": "服务器健康检查"
+      }
+    ]
+  },
+  "dependencies": {
+    "fastmcp": ">=0.9.0",
+    "markitdown": ">=0.0.1a2",
+    "pypandoc": ">=1.13",
+    "python-docx": ">=1.1.2",
+    "pdfplumber": ">=0.11.4"
+  }
+}

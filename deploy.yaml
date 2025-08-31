@@ -1,0 +1,91 @@
+# 魔搭MCP广场部署配置
+apiVersion: v1
+kind: MCPServer
+metadata:
+  name: mcp-document-converter
+  version: "1.0.0"
+  description: "多格式文档转换 MCP 服务器"
+  author: "MCP Document Converter Team"
+  tags:
+    - document-conversion
+    - pdf
+    - word
+    - markdown
+    - html
+    - office
+  categories:
+    - 文档处理
+    - 格式转换
+    - 办公工具
+
+spec:
+  # 运行时配置
+  runtime:
+    python: ">=3.8"
+    main: "main.py"
+    workdir: "/app"
+    
+  # 依赖配置
+  dependencies:
+    - fastmcp>=0.9.0
+    - markitdown>=0.0.1a2
+    - pypandoc>=1.13
+    - python-docx>=1.1.2
+    - pdfplumber>=0.11.4
+    - markdown>=3.7
+    - beautifulsoup4>=4.12.3
+    - lxml>=5.3.0
+    
+  # 系统依赖
+  system_dependencies:
+    - pandoc  # 可选，用于更多格式支持
+    
+  # 环境变量
+  environment:
+    PYTHONPATH: "/app/src"
+    
+  # 资源限制
+  resources:
+    memory: "512Mi"
+    cpu: "500m"
+    
+  # 健康检查
+  health_check:
+    enabled: true
+    timeout: 30
+    
+  # 工具配置
+  tools:
+    - name: convert_document
+      description: "转换文档格式，支持PDF、Word、Markdown、HTML等格式"
+      category: "文档处理"
+      
+    - name: list_supported_formats
+      description: "列出所有支持的文档格式"
+      category: "信息查询"
+      
+    - name: get_file_info
+      description: "获取文件的详细信息，包括格式、大小等"
+      category: "文件操作"
+      
+    - name: batch_convert
+      description: "批量转换指定目录下的文档"
+      category: "批量处理"
+      
+  # 示例配置
+  examples:
+    - name: "PDF转Markdown"
+      description: "将PDF文件转换为Markdown格式"
+      tool: "convert_document"
+      parameters:
+        input_path: "document.pdf"
+        output_path: "document.md"
+        target_format: "markdown"
+        
+    - name: "批量转换Word文档"
+      description: "将目录下所有Word文档转换为HTML"
+      tool: "batch_convert"
+      parameters:
+        input_dir: "./docs"
+        output_dir: "./html_docs"
+        target_format: "html"

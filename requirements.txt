@@ -1,0 +1,24 @@
+# FastMCP framework
+fastmcp>=2.0.0
+
+# Document conversion core libraries
+markitdown[all]>=0.0.1a2
+pypandoc>=1.13
+
+# Document processing libraries
+python-docx>=1.1.0
+pdfplumber>=0.11.0
+markdown>=3.6
+
+# MCP related
+mcp>=1.2.0
+
+# Optional dependencies for enhanced functionality
+Pillow>=10.0.0
+openpyxl>=3.1.0
+beautifulsoup4>=4.12.0
+lxml>=5.0.0
+
+# Development and testing
+pytest>=8.0.0
+pytest-asyncio>=0.23.0

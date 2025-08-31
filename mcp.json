@@ -1,0 +1,12 @@
+{
+  "name": "mcp-document-converter",
+  "version": "1.0.0",
+  "description": "文档转换 MCP 服务器",
+  "main": "main.py",
+  "mcp": {
+    "server": {
+      "command": "python",
+      "args": ["main.py"]
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "_comment": "文档转换 MCP 服务器配置示例",
+  "_instructions": [
+    "1. 复制此配置到对应的 MCP 配置文件中",
+    "2. 修改 'command' 和 'args' 中的路径为实际路径",
+    "3. 重启 AI 应用程序"
+  ],
+  
+  "claude_desktop_config": {
+    "_path_windows": "%APPDATA%\\Claude\\claude_desktop_config.json",
+    "_path_macos": "~/Library/Application Support/Claude/claude_desktop_config.json",
+    "_path_linux": "~/.config/claude/claude_desktop_config.json",
+    
+    "mcpServers": {
+      "document-converter": {
+        "command": "python",
+        "args": ["e:\\DocumentConversion\\document_converter_server.py"],
+        "cwd": "e:\\DocumentConversion",
+        "env": {
+          "PYTHONPATH": "e:\\DocumentConversion"
+        }
+      }
+    }
+  },
+  
+  "cursor_config": {
+    "_path": "~/.cursor/mcp.json",
+    
+    "mcpServers": {
+      "document-converter": {
+        "command": "python",
+        "args": ["e:\\DocumentConversion\\document_converter_server.py"],
+        "cwd": "e:\\DocumentConversion",
+        "env": {
+          "PYTHONPATH": "e:\\DocumentConversion"
+        }
+      }
+    }
+  },
+  
+  "alternative_configs": {
+    "_comment": "其他可能的配置方式",
+    
+    "using_virtual_environment": {
+      "command": "e:\\DocumentConversion\\venv\\Scripts\\python.exe",
+      "args": ["e:\\DocumentConversion\\document_converter_server.py"],
+      "cwd": "e:\\DocumentConversion"
+    },
+    
+    "using_absolute_python_path": {
+      "command": "C:\\Python311\\python.exe",
+      "args": ["e:\\DocumentConversion\\document_converter_server.py"],
+      "cwd": "e:\\DocumentConversion",
+      "env": {
+        "PYTHONPATH": "e:\\DocumentConversion"
+      }
+    },
+    
+    "with_debug_logging": {
+      "command": "python",
+      "args": ["e:\\DocumentConversion\\document_converter_server.py"],
+      "cwd": "e:\\DocumentConversion",
+      "env": {
+        "PYTHONPATH": "e:\\DocumentConversion",
+        "PYTHONUNBUFFERED": "1",
+        "LOG_LEVEL": "DEBUG"
+      }
+    }
+  },
+  
+  "setup_instructions": {
+    "step1": "安装依赖: pip install -r requirements.txt",
+    "step2": "测试服务器: python test_server.py",
+    "step3": "复制配置到对应的 MCP 配置文件",
+    "step4": "修改路径为实际路径",
+    "step5": "重启 AI 应用程序",
+    "step6": "在聊天中测试: '显示所有支持的文档格式'"
+  },
+  
+  "troubleshooting": {
+    "common_issues": {
+      "server_not_found": "检查 Python 路径和脚本路径是否正确",
+      "import_error": "确保所有依赖都已安装: pip install -r requirements.txt",
+      "permission_error": "检查文件权限，确保 Python 可以执行脚本",
+      "pandoc_error": "安装 Pandoc: https://pandoc.org/installing.html"
+    },
+    
+    "debug_commands": {
+      "test_python": "python --version",
+      "test_script": "python e:\\DocumentConversion\\document_converter_server.py --help",
+      "test_imports": "python -c \"import fastmcp, markitdown, pypandoc; print('All imports OK')\"",
+      "run_tests": "python e:\\DocumentConversion\\test_server.py"
+    }
+  }
+}

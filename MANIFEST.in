@@ -1,0 +1,22 @@
+# 包含配置文件
+include mcp.json
+include requirements.txt
+include README.md
+include LICENSE
+
+# 包含测试文件
+include test_server.py
+
+# 包含示例配置
+include mcp_config_example.json
+
+# 排除不必要的文件
+exclude *.pyc
+exclude __pycache__
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+
+# 排除开发文件
+exclude .gitignore
+exclude .git
+recursive-exclude .git *
